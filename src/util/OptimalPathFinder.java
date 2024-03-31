@@ -42,8 +42,7 @@ public class OptimalPathFinder {
         double totalTime = 0;
 
         Location startLocation = start;
-        for (int i = 0; i < locations.length; i++) {
-            Location currentLocation = locations[i];
+        for (Location currentLocation : locations) {
             double timeToLocation = calculateTimeToLocation(startLocation, currentLocation);
             totalTime += timeToLocation;
 
