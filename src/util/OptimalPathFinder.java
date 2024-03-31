@@ -25,7 +25,6 @@ public class OptimalPathFinder {
         pathTimes.put("DE -> R1 -> C1 -> R2 -> C2", calculateTotalDeliveryTime(DE, R1, C1, R2, C2));
         pathTimes.put("DE -> R1 -> R2 -> C2 -> C1", calculateTotalDeliveryTime(DE, R1, R2, C2, C1));
 
-
         String optimalPath = "";
         double minTime = Double.MAX_VALUE;
 
@@ -41,17 +40,25 @@ public class OptimalPathFinder {
 
     private double calculateTotalDeliveryTime(Location start, Location... locations) {
         double totalTime = 0;
-        Location prevLocation = start;
-        for (Location location : locations) {
-            double timeToLocation = calculateTimeToLocation(prevLocation, location);
+
+        Location startLocation = start;
+        for (int i = 0; i < locations.length; i++) {
+            Location currentLocation = locations[i];
+            double timeToLocation = calculateTimeToLocation(startLocation, currentLocation);
             totalTime += timeToLocation;
-            if (location instanceof Restaurant) {
-                double preparationTimeLeft = Math.max(((Restaurant) location).getPreparationTime() - timeToLocation, 0);
+
+            if (currentLocation instanceof Restaurant) {
+                double preparationTimeLeft = getPreparationTimeLeft((Restaurant) currentLocation, totalTime);
                 totalTime += preparationTimeLeft;
             }
-            prevLocation = location;
+            startLocation = currentLocation;
         }
+
         return totalTime;
+    }
+
+    private double getPreparationTimeLeft(Restaurant location, double timeToLocation) {
+        return Math.max(location.getPreparationTime() - timeToLocation, 0);
     }
 
     private double calculateTimeToLocation(Location from, Location to) {
